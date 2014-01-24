@@ -1,21 +1,21 @@
 require 'spec_helper'
-describe APN::Backend do
+describe APN2::Backend do
 
   context "when not setting any backend" do
 
     it "is a simple backend" do
-      expect(APN.backend).to be_a(APN::Backend::Simple)
+      expect(APN2.backend).to be_a(APN2::Backend::Simple)
     end
   end
 
   context "when setting a nil backend" do
 
     before do
-      APN.backend = nil
+      APN2.backend = nil
     end
 
     it "is a simple backend" do
-      expect(APN.backend).to be_a(APN::Backend::Simple)
+      expect(APN2.backend).to be_a(APN2::Backend::Simple)
     end
   end
 
@@ -23,11 +23,11 @@ describe APN::Backend do
     context "when setting a sidekiq backend" do
 
       before do
-        APN.backend = :sidekiq
+        APN2.backend = :sidekiq
       end
 
       it "is a simple backend" do
-        expect(APN.backend).to be_a(APN::Backend::Sidekiq)
+        expect(APN2.backend).to be_a(APN2::Backend::Sidekiq)
       end
     end
   end
@@ -36,11 +36,11 @@ describe APN::Backend do
     context "when setting a resque backend" do
 
       before do
-        APN.backend = :resque
+        APN2.backend = :resque
       end
 
       it "is a simple backend" do
-        expect(APN.backend).to be_a(APN::Backend::Resque)
+        expect(APN2.backend).to be_a(APN2::Backend::Resque)
       end
     end
   end

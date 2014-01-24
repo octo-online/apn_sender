@@ -4,13 +4,13 @@ require "active_support/core_ext"
 require "active_support/json"
 require 'connection_pool'
 
-require "apn/version"
-require 'apn/connection'
+require "apn2/version"
+require 'apn2/connection'
 
-module APN
+module APN2
 
   class << self
-    include APN::Connection
+    include APN2::Connection
 
     def notify_async(token, opts = {})
       token = token.to_s.gsub(/\W/, '')
@@ -19,10 +19,10 @@ module APN
 
     def notify_sync(token, opts)
       token = token.to_s.gsub(/\W/, '')
-      msg = APN::Notification.new(token, opts)
+      msg = APN2::Notification.new(token, opts)
       raise "Invalid notification options (did you provide :alert, :badge, or :sound?): #{opts.inspect}" unless msg.valid?
 
-      APN.with_connection do |client|
+      APN2.with_connection do |client|
         client.push(msg)
       end
     end
@@ -31,16 +31,16 @@ module APN
       @backend =
         case backend
         when Symbol
-          APN::Backend.const_get(backend.to_s.camelize).new
+          APN2::Backend.const_get(backend.to_s.camelize).new
         when nil
-          APN::Backend::Simple.new
+          APN2::Backend::Simple.new
         else
           backend
         end
     end
 
     def backend
-      @backend ||= APN::Backend::Simple.new
+      @backend ||= APN2::Backend::Simple.new
     end
 
     def logger=(logger)
@@ -82,13 +82,13 @@ module APN
   end
 end
 
-require 'apn/notification'
-require 'apn/client'
-require 'apn/feedback'
+require 'apn2/notification'
+require 'apn2/client'
+require 'apn2/feedback'
 
-module APN::Jobs
+module APN2::Jobs
   QUEUE_NAME = :apple_push_notifications
 end
 
-require "apn/railtie" if defined?(Rails)
-require 'apn/backend'
+require "apn2/railtie" if defined?(Rails)
+require 'apn2/backend'

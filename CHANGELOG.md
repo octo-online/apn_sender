@@ -4,7 +4,7 @@
 - Change backend switch:
   Use simple backend per default, also allow changes.
   Now you can change the backend using:
-        APN.backend = :sidekiq
+        APN2.backend = :sidekiq
 
 ## 2.0.1
 - Use bytesize to truncate alert when necessary

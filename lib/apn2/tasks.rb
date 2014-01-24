@@ -4,7 +4,7 @@ namespace :apn do
   task :work => :sender
   task :workers => :senders
 
-  desc "Start an APN worker"
+  desc "Start an APN2 worker"
   task :sender => :setup do
     require 'apn'
 
@@ -13,19 +13,19 @@ namespace :apn do
       return
     end
 
-    APN.backend = :resque
-    APN.password = ENV['CERT_PASS']
-    APN.full_certificate_path =  ENV['FULL_CERT_PATH']
-    APN.logger = Rails.logger
+    APN2.backend = :resque
+    APN2.password = ENV['CERT_PASS']
+    APN2.full_certificate_path =  ENV['FULL_CERT_PATH']
+    APN2.logger = Rails.logger
 
-    worker = ::Resque::Worker.new(APN::Jobs::QUEUE_NAME)
+    worker = ::Resque::Worker.new(APN2::Jobs::QUEUE_NAME)
 
     puts "*** Starting worker to send apple notifications in the background from #{worker}"
 
     worker.work(ENV['INTERVAL'] || 5) # interval, will block
   end
 
-  desc "Start multiple APN workers. Should only be used in dev mode."
+  desc "Start multiple APN2 workers. Should only be used in dev mode."
   task :senders do
     threads = []
 

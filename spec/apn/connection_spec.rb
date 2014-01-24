@@ -1,9 +1,9 @@
 require 'spec_helper'
-describe APN::Connection do
+describe APN2::Connection do
 
   module MockConnection
     class << self
-      include APN::Connection
+      include APN2::Connection
     end
   end
 

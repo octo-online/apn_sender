@@ -5,6 +5,6 @@ RAILS_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
 require 'rubygems'
 require 'apn'
-require 'apn/sender_daemon'
+require 'apn2/sender_daemon'
 
-APN::SenderDaemon.new(ARGV).daemonize
+APN2::SenderDaemon.new(ARGV).daemonize
