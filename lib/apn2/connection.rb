@@ -16,7 +16,7 @@ module APN2
 
     def reset_connection
       connection_pool.with do |client|
-        client.reset_socket
+        client.send(:reset_socket)
       end
     end
 
