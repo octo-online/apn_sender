@@ -14,6 +14,10 @@ module APN2
       connection_pool.with(&block)
     end
 
+    def reset_connection
+      @pool = nil
+    end
+
     # pool config
     attr_accessor :pool_size, :pool_timeout
 
