@@ -19,6 +19,8 @@ module APN2
         client.send(:reset_socket)
       end
       @pool = nil
+      @apn_cert = nil
+      @cert_name = nil
     end
 
     # pool config
