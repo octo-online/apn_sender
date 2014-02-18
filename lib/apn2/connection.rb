@@ -15,7 +15,9 @@ module APN2
     end
 
     def reset_connection
-      @pool = nil
+      connection_pool.with do |client|
+        client.reset_socket
+      end
     end
 
     # pool config
