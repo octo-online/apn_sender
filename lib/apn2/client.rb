@@ -58,7 +58,6 @@ module APN2
     def reset_socket
       @socket.close if @socket
       @socket = nil
-      socket
     end
 
     def setup_certificate
