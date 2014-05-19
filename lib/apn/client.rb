@@ -1,4 +1,4 @@
-module APN2
+module APN
   class Client
 
     DEFAULTS = {port: 2195, host: "gateway.push.apple.com"}
@@ -16,23 +16,23 @@ module APN2
 
       if IO.select([socket], nil, nil, 1) && error = socket.read(6)
         error = error.unpack("ccN")
-        APN2.log(:error, "Error on message: #{error}")
+        APN.log(:error, "Error on message: #{error}")
         return false
       end
 
-      APN2.log(:debug, "Message sent.")
+      APN.log(:debug, "Message sent.")
       true
     rescue OpenSSL::SSL::SSLError, Errno::EPIPE => e
-      APN2.log(:error, "[##{self.object_id}] Exception occurred: #{e.inspect}, socket state: #{socket.inspect}")
+      APN.log(:error, "[##{self.object_id}] Exception occurred: #{e.inspect}, socket state: #{socket.inspect}")
       reset_socket
-      APN2.log(:debug, "[##{self.object_id}] Socket reestablished, socket state: #{socket.inspect}")
+      APN.log(:debug, "[##{self.object_id}] Socket reestablished, socket state: #{socket.inspect}")
       retry
     end
 
     def feedback
       if bunch = socket.read(38)
         f = bunch.strip.unpack('N1n1H140')
-        APN2::FeedbackItem.new(Time.at(f[0]), f[2])
+        APN::FeedbackItem.new(Time.at(f[0]), f[2])
       end
     end
 
@@ -46,7 +46,7 @@ module APN2
     def setup_socket
       ctx = setup_certificate
 
-      APN2.log(:debug, "Connecting to #{@host}:#{@port}...")
+      APN.log(:debug, "Connecting to #{@host}:#{@port}...")
 
       socket_tcp = TCPSocket.new(@host, @port)
       OpenSSL::SSL::SSLSocket.new(socket_tcp, ctx).tap do |s|
@@ -65,7 +65,7 @@ module APN2
       ctx.cert = OpenSSL::X509::Certificate.new(@apn_cert)
       if @cert_pass
         ctx.key = OpenSSL::PKey::RSA.new(@apn_cert, @cert_pass)
-        APN2.log(:debug, "Setting up certificate using a password.")
+        APN.log(:debug, "Setting up certificate using a password.")
 
       else
         ctx.key = OpenSSL::PKey::RSA.new(@apn_cert)

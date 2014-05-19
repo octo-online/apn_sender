@@ -13,7 +13,7 @@ This gem includes a background daemon which processes background messages from y
 
 ## Yet another ApplePushNotification interface?
 
-Yup.  There's some great code out there already, but we didn't like the idea of getting banned from the APN2 gateway for establishing a new connection each time we needed to send a batch of messages, and none of the libraries I found handled maintaining a persistent connection.
+Yup.  There's some great code out there already, but we didn't like the idea of getting banned from the APN gateway for establishing a new connection each time we needed to send a batch of messages, and none of the libraries I found handled maintaining a persistent connection.
 
 ## Current Status
 
@@ -21,7 +21,7 @@ This gem has been used in production, on [500px](http://500px.com), sending hund
 
 ## Usage
 
-APN2 sender can use [Resque](http://github.com/defunkt/resque) or [Sidekiq](https://github.com/mperham/sidekiq) to send asynchronous messages, if none of them are installed it creates a new thread to send messages.
+APN sender can use [Resque](http://github.com/defunkt/resque) or [Sidekiq](https://github.com/mperham/sidekiq) to send asynchronous messages, if none of them are installed it creates a new thread to send messages.
 
 ### 1. Use a background processor or not.
 
@@ -32,7 +32,7 @@ You can either use Resque or Sidekiq, I strongly advice using Sidekiq, as apn_se
 To queue a message for sending through Apple's Push Notification service from your Rails application:
 
 ```
-APN2.notify_async(token, opts_hash)
+APN.notify_async(token, opts_hash)
 ```
 
 Where ```token``` is the unique identifier of the iPhone to receive the notification and ```opts_hash``` can have any of the following keys:
@@ -50,12 +50,12 @@ Put your ```apn_development.pem``` and ```apn_production.pem``` certificates fro
 You also can configure some extra settings:
 
 ```
-APN2.root = 'RAILS_ROOT/config/certs' # root to certificates folder
-APN2.certificate_name = 'apn_production.pem' # certificate filename
-APN2.host = 'apple host (on development sandbox url is used by default)'
-APN2.password = 'certificate_password'
-APN2.pool_size = 1 # number of connections on the pool
-APN2.pool_timeout = 5 # timeout in seconds for connection pool
+APN.root = 'RAILS_ROOT/config/certs' # root to certificates folder
+APN.certificate_name = 'apn_production.pem' # certificate filename
+APN.host = 'apple host (on development sandbox url is used by default)'
+APN.password = 'certificate_password'
+APN.pool_size = 1 # number of connections on the pool
+APN.pool_timeout = 5 # timeout in seconds for connection pool
 ```
 
 Check ```logs/apn_sender.log``` for debugging output.  In addition to logging any major errors there, apn_sender hooks into the Resque::Worker logging to display any verbose or very_verbose worker output in apn_sender.log file as well.
@@ -68,9 +68,9 @@ Since push notifications are a fire-and-forget sorta deal, where you get no indi
 It's actually really simple - you connect to them periodically and they give you a big dump of tokens you shouldn't send to anymore.  The gem wraps this up nicely -- just call:
 
 ```
- # APN2::Feedback accepts the same optional :environment
- # and :cert_path / :full_cert_path options as APN2::Sender
- feedback = APN2::Feedback.new()
+ # APN::Feedback accepts the same optional :environment
+ # and :cert_path / :full_cert_path options as APN::Sender
+ feedback = APN::Feedback.new()
 
  tokens = feedback.tokens # Array of device tokens
  tokens.each do |token|
@@ -82,7 +82,7 @@ It's actually really simple - you connect to them periodically and they give you
 If you're interested in knowing exactly <em>when</em> Apple determined each token was expired (which can be useful in determining if the application re-registered with your service since it first appeared in the expired queue):
 
 ```
- items = feedback.data # Array of APN2::FeedbackItem elements
+ items = feedback.data # Array of APN::FeedbackItem elements
  items.each do |item|
    item.token
    item.timestamp
@@ -102,7 +102,7 @@ If you're sending notifications, you should definitely call one of the ```receiv
 Just for the record, this is essentially what you want to have whenever run periodically for you:
 ```
 def self.clear_uninstalled_applications
-  feedback_data = APN2::Feedback.new(:environment #> :production).data
+  feedback_data = APN::Feedback.new(:environment #> :production).data
 
   feedback_data.each do |item|
     user = User.find_by_iphone_token( item.token )
@@ -139,12 +139,12 @@ Or install it yourself as:
 To add a few useful rake tasks for running workers, add the following line to your Rakefile:
 
 ```
-  require 'apn2/tasks'
+  require 'apn/tasks'
 ```
 
 ## License
 
-APN2 Sender is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+APN Sender is released under the [MIT License](http://www.opensource.org/licenses/MIT).
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/arthurnn/apn_sender/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

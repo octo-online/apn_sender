@@ -1,5 +1,5 @@
-module APN2
-  # Encapsulates data returned from the {APN2 Feedback Service}[http://developer.apple.com/iphone/library/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingWIthAPS/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW3].
+module APN
+  # Encapsulates data returned from the {APN Feedback Service}[http://developer.apple.com/iphone/library/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingWIthAPS/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW3].
   # Possesses +timestamp+ and +token+ attributes.
   class FeedbackItem
     attr_accessor :timestamp, :token
@@ -15,8 +15,8 @@ module APN2
     end
   end
 
-  # When supplied with the certificate path and the desired environment, connects to the {APN2 Feedback Service}[http://developer.apple.com/iphone/library/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingWIthAPS/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW3]
-  # and returns any response as an array of APN2::FeedbackItem elements.
+  # When supplied with the certificate path and the desired environment, connects to the {APN Feedback Service}[http://developer.apple.com/iphone/library/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingWIthAPS/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW3]
+  # and returns any response as an array of APN::FeedbackItem elements.
   #
   # See README for usage and details.
   class Feedback
@@ -25,7 +25,7 @@ module APN2
       @apn_host, @apn_port = options[:host], options[:port]
     end
 
-    # Returns array of APN2::FeedbackItem elements read from Apple. Connects to Apple once and caches the
+    # Returns array of APN::FeedbackItem elements read from Apple. Connects to Apple once and caches the
     # data, continues to returns cached data unless called with <code>data(true)</code>, which clears the
     # existing feedback array.  Note that once you force resetting the cache you loose all previous feedback,
     # so be sure you've already processed it.
@@ -52,7 +52,7 @@ module APN2
     protected
 
     # Connects to Apple's Feedback Service and checks if there's anything there for us.
-    # Returns an array of APN2::FeedbackItem pairs
+    # Returns an array of APN::FeedbackItem pairs
     def receive
       feedbacks = []
       while f = client.feedback
@@ -62,10 +62,10 @@ module APN2
     end
 
     def client
-      @client ||= APN2::Client.new(host: host,
+      @client ||= APN::Client.new(host: host,
                                   port: port,
-                                  certificate: APN2.certificate,
-                                  password: APN2.password)
+                                  certificate: APN.certificate,
+                                  password: APN.password)
     end
 
     def host

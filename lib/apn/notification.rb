@@ -1,21 +1,21 @@
-module APN2
+module APN
   # Encapsulates the logic necessary to convert an iPhone token and an array of options into a string of the format required
   # by Apple's servers to send the notification.  Much of the processing code here copied with many thanks from
   # http://github.com/samsoffes/apple_push_notification/blob/master/lib/apple_push_notification.rb
   #
-  # APN2::Notification.new's first argument is the token of the iPhone which should receive the notification.  The second argument
+  # APN::Notification.new's first argument is the token of the iPhone which should receive the notification.  The second argument
   # is a hash with any of :alert, :badge, and :sound keys. All three accept string arguments, while :sound can also be set to +true+
   # to play the default sound installed with the application. At least one of these keys must exist.  Any other keys are merged into
   # the root of the hash payload ultimately sent to the iPhone:
   #
-  #   APN2::Notification.new(token, {:alert => 'Stuff', :custom => {:code => 23}})
+  #   APN::Notification.new(token, {:alert => 'Stuff', :custom => {:code => 23}})
   #   # Writes this JSON to servers: {"aps" => {"alert" => "Stuff"}, "custom" => {"code" => 23}}
   #
-  # As a shortcut, APN2::Notification.new also accepts a string as the second argument, which it converts into the alert to send.  The
+  # As a shortcut, APN::Notification.new also accepts a string as the second argument, which it converts into the alert to send.  The
   # following two lines are equivalent:
   #
-  #   APN2::Notification.new(token, 'Some Alert')
-  #   APN2::Notification.new(token, {:alert => 'Some Alert'})
+  #   APN::Notification.new(token, 'Some Alert')
+  #   APN::Notification.new(token, {:alert => 'Some Alert'})
   #
   class Notification
     # Available to help clients determine before they create the notification if their message will be too large.
@@ -83,7 +83,7 @@ module APN2
       def payload(hash)
         str = ActiveSupport::JSON::encode(hash)
 
-        if APN2.truncate_alert && str.bytesize > DATA_MAX_BYTES
+        if APN.truncate_alert && str.bytesize > DATA_MAX_BYTES
           if hash['aps']['alert'].is_a?(Hash)
             alert = hash['aps']['alert']['loc-args'][0]
           else

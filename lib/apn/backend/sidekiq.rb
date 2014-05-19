@@ -1,16 +1,16 @@
 begin
   require 'sidekiq'
-  require 'apn2/jobs/sidekiq_notification_job'
+  require 'apn/jobs/sidekiq_notification_job'
 rescue LoadError => e
   $stderr.puts "You don't have sidekiq installed in your application. Please add it to your Gemfile and run bundle install"
   raise e
 end
 
-module APN2
+module APN
   module Backend
     class Sidekiq
       def notify(token, opts)
-        ::Sidekiq::Client.enqueue(APN2::Jobs::SidekiqNotificationJob, token, opts)
+        ::Sidekiq::Client.enqueue(APN::Jobs::SidekiqNotificationJob, token, opts)
       end
     end
   end

@@ -21,4 +21,4 @@ RSpec.configure do |config|
 end
 
 ## preload the apn backend
-APN2.backend
+APN.backend

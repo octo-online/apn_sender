@@ -5,8 +5,8 @@ require 'optparse'
 require 'logger'
 require 'resque'
 
-module APN2
-  # A wrapper designed to daemonize an APN2::Sender instance to keep in running in the background.
+module APN
+  # A wrapper designed to daemonize an APN::Sender instance to keep in running in the background.
   # Connects worker's output to a custom logger, if available.  Creates a pid file suitable for
   # monitoring with {monit}[http://mmonit.com/monit/].
   #
@@ -59,12 +59,12 @@ module APN2
     end
 
     def run(worker_name = nil)
-      APN2.password = @options[:cert_pass]
-      APN2.full_certificate_path = @options[:full_cert_path]
-      APN2.root = @options[:cert_root]
-      APN2.certificate_name = @options[:certificate_name]
+      APN.password = @options[:cert_pass]
+      APN.full_certificate_path = @options[:full_cert_path]
+      APN.root = @options[:cert_root]
+      APN.certificate_name = @options[:certificate_name]
 
-      worker = ::Resque::Worker.new(APN2::Jobs::QUEUE_NAME)
+      worker = ::Resque::Worker.new(APN::Jobs::QUEUE_NAME)
       worker.work(@options[:delay])
     rescue => e
       STDERR.puts e.message

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 require 'spec_helper'
-describe APN2::Notification do
+describe APN::Notification do
 
   let(:token) { "2589b1aa 363d23d8 d7f16695 1a9e3ff4 1fb0130a 637d6997 a2080d88 1b2a19b5" }
   let(:payload) {"fake"}
   let(:notification) do
-    APN2::Notification.new(token, payload)
+    APN::Notification.new(token, payload)
   end
 
   describe ".packaged_message" do
@@ -86,17 +86,17 @@ describe APN2::Notification do
   describe ".truncate_alert!" do
 
     before do
-      APN2.truncate_alert = true
+      APN.truncate_alert = true
     end
     after do
-      APN2.truncate_alert = false
+      APN.truncate_alert = false
     end
 
     context "when alert is a string" do
       let(:payload) { "a" * 300 }
 
       it "truncates the alert" do
-        expect(notification.packaged_message.size.to_i).to eq(APN2::Notification::DATA_MAX_BYTES)
+        expect(notification.packaged_message.size.to_i).to eq(APN::Notification::DATA_MAX_BYTES)
       end
 
       it "has payload size equals payload byte size" do
@@ -114,7 +114,7 @@ describe APN2::Notification do
       end
 
       it "truncates the alert" do
-        expect(notification.packaged_message.size.to_i).to eq(APN2::Notification::DATA_MAX_BYTES)
+        expect(notification.packaged_message.size.to_i).to eq(APN::Notification::DATA_MAX_BYTES)
       end
 
       it "has payload size equals payload byte size" do
@@ -126,7 +126,7 @@ describe APN2::Notification do
       let(:payload) { "»" * 256 }
 
       it "truncates the alert" do
-        expect(notification.payload_size).to eq(APN2::Notification::DATA_MAX_BYTES)
+        expect(notification.payload_size).to eq(APN::Notification::DATA_MAX_BYTES)
       end
 
       it "has different payload size and message size" do

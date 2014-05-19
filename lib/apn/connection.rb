@@ -1,9 +1,9 @@
-module APN2
+module APN
   module Connection
 
     def connection_pool
       @pool ||= ConnectionPool.new(size: (pool_size || 1), timeout: (pool_timeout || 5)) do
-        APN2::Client.new(host: host,
+        APN::Client.new(host: host,
                         port: port,
                         certificate: certificate,
                         password: password)

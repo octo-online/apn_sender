@@ -1,12 +1,12 @@
 require 'spec_helper'
-describe APN2::Client do
+describe APN::Client do
 
   let(:socket) { double("SSLSocket") }
 
   describe ".push" do
 
     let(:client) do
-      APN2::Client.new
+      APN::Client.new
     end
 
     before do
@@ -29,17 +29,17 @@ describe APN2::Client do
     let(:certificate) { double("certificate") }
 
     before do
-      APN2::Client.any_instance.should_receive(:setup_certificate).and_return(certificate)
+      APN::Client.any_instance.should_receive(:setup_certificate).and_return(certificate)
     end
 
     context "when not passing args" do
 
       let(:client) do
-        APN2::Client.new
+        APN::Client.new
       end
 
       it "tries to connect using default host and port" do
-        TCPSocket.should_receive(:new).with(APN2::Client::DEFAULTS[:host], APN2::Client::DEFAULTS[:port])
+        TCPSocket.should_receive(:new).with(APN::Client::DEFAULTS[:host], APN::Client::DEFAULTS[:port])
         OpenSSL::SSL::SSLSocket.should_receive(:new).and_return(socket)
         socket.stub(:sync=)
         socket.stub(:connect)
@@ -51,11 +51,11 @@ describe APN2::Client do
     context "when passing host and port nil" do
 
       let(:client) do
-        APN2::Client.new(host: nil, port: nil)
+        APN::Client.new(host: nil, port: nil)
       end
 
       it "tries to connect using default host and port" do
-        TCPSocket.should_receive(:new).with(APN2::Client::DEFAULTS[:host], APN2::Client::DEFAULTS[:port])
+        TCPSocket.should_receive(:new).with(APN::Client::DEFAULTS[:host], APN::Client::DEFAULTS[:port])
         OpenSSL::SSL::SSLSocket.should_receive(:new).and_return(socket)
         socket.stub(:sync=)
         socket.stub(:connect)
